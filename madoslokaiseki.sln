@@ -7,6 +7,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "obbextract", "obbextract\ob
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "binsplit", "binsplit\binsplit.vcxproj", "{730F9D96-841F-4A3C-A593-A028521526C8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ogt2png", "ogt2png\ogt2png.vcxproj", "{7FE034E4-0168-4A89-9779-68759F46D032}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -21,6 +23,10 @@ Global
 		{730F9D96-841F-4A3C-A593-A028521526C8}.Debug|Win32.Build.0 = Debug|Win32
 		{730F9D96-841F-4A3C-A593-A028521526C8}.Release|Win32.ActiveCfg = Release|Win32
 		{730F9D96-841F-4A3C-A593-A028521526C8}.Release|Win32.Build.0 = Release|Win32
+		{7FE034E4-0168-4A89-9779-68759F46D032}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7FE034E4-0168-4A89-9779-68759F46D032}.Debug|Win32.Build.0 = Debug|Win32
+		{7FE034E4-0168-4A89-9779-68759F46D032}.Release|Win32.ActiveCfg = Release|Win32
+		{7FE034E4-0168-4A89-9779-68759F46D032}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
