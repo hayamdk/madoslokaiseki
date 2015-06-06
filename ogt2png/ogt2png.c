@@ -146,6 +146,8 @@ int save_indexcolor_png(FILE *fp, const char *fname_out, uint32_t width, uint32_
 	write_png_chunk(fp_out, png_IDAT);
 	write_png_chunk(fp_out, png_IEND);
 
+	free(png_tRNS);
+	free(png_PLTE);
 	free(png_IDAT);
 	fclose(fp_out);
 
@@ -271,12 +273,14 @@ int save_etc1_to_png(FILE *fp, const char *fname_out, uint32_t allsize, uint32_t
 	uint32_t var;
 	fread(&var, 4, 1, fp);
 
-	uint8_t *data = malloc(allsize - 4);
+	uint8_t *data = malloc(allsize + 10);
 	uint8_t *buf = malloc(width*height / 2);
-	//memset(data, 0x00, allsize + 10);
+	memset(data, 0x00, allsize + 10); /* 少し多めに0で埋めておくとノイズが残りにくい（謎） */
 	memset(buf, 0x00, width*height / 2);
-	fread(data, 1, allsize - 4, fp);
-	LZ4_decompress_safe((char*)data, (char*)buf, allsize - 4, width*height / 2);
+	fread(data, 1, allsize-4, fp); /* 本来の画像データサイズはallsize-4 */
+
+	/* ここでLZ4_decompress_safe()は負の値を返すので本当は解凍に成功していない（謎） */
+	ret = LZ4_decompress_safe((char*)data, (char*)buf, allsize+10, width*height / 2);
 
 	/*int i = 0x34400;
 	uint8_t tmp[] = { 0x00, 0x00, 0x00, 0x02, 0xff, 0xff, 0xff, 0xff };
@@ -307,6 +311,9 @@ int save_etc1_to_png(FILE *fp, const char *fname_out, uint32_t allsize, uint32_t
 	bmp = combile_alpha(bmp);
 	ret = rgb32bmp_output_png(bmp, fname_out);
 	rgb32bmp_delete(bmp);
+
+	free(buf);
+	free(data);
 
 	return ret;
 }
@@ -372,17 +379,20 @@ const char *change_ext(const char *fname_in, const char *ext)
 
 int main(int argc, const char *argv[])
 {
+	int i;
 	const char *fname_in, *fname_out;
 
-	if (argc != 2) {
-		printf("invalid argument!\nUsage: ogt2png.exe [input file]\n");
+	if (argc < 2) {
+		printf("invalid argument!\nUsage: ogt2png.exe [input file1] [input file2] ...\n");
 		return 1;
 	}
 
-	fname_in = argv[1];
-	fname_out = change_ext(fname_in, ".png");
-
-	convert_ogt(fname_in, fname_out);
+	for (i = 1; i < argc; i++) {
+		fname_in = argv[i];
+		fname_out = change_ext(fname_in, ".png");
+		convert_ogt(fname_in, fname_out);
+		free((char*)fname_out);
+	}
 
 	return 0;
 }
